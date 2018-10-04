@@ -169,3 +169,28 @@ aksarav@middlewareinventory:/apps/kubernetes$
 ```
 
 ### Step9
+_Create a Manifest file with **Replication Controller** to acheive **desired state**_
+
+```
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: sarav-sample-rc
+spec:
+  replicas: 5
+  selector:
+    app: redis-app
+  template:
+    metadata:
+      labels:
+        app: redis-app
+        zone: production
+    spec:
+      containers:
+      - name: redispod
+        image: saravak/redis:latest 
+        ports:
+        - containerPort: 6379
+```
+
+
