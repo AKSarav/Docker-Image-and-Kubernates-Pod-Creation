@@ -99,7 +99,8 @@ spec:
 
 ### Step7
 *Create a POD using Kubectl command using the Manifest file we have created in Step6*
-```aksarav@middlewareinventory:/apps/kubernetes$ kubectl create -f create-redispod.yml
+```java
+aksarav@middlewareinventory:/apps/kubernetes$ kubectl create -f create-redispod.yml
 pod/radis-pod created
 aksarav@middlewareinventory:/apps/kubernetes$ kubectl get pods
 NAME                              READY   STATUS    RESTARTS   AGE
