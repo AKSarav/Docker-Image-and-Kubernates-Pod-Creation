@@ -169,7 +169,7 @@ aksarav@middlewareinventory:/apps/kubernetes$
 ```
 
 ### Step9
-_Create a Manifest file with **Replication Controller** to acheive **desired state**_
+_Create a Manifest file with **Replication Controller** to acheive **desired state** with following content and **create** it_ 
 
 ```
 apiVersion: v1
@@ -192,5 +192,61 @@ spec:
         ports:
         - containerPort: 6379
 ```
+```
+aksarav@middlewareinventory:/apps/kubernetes$ kubectl create -f create-redispod-scalable-replicationcontrollers.yml 
+replicationcontroller/redis-db-desiredstate-rc created
+```
+
+### Step10
+_check newly created **replicationcontroller** status and see **the statistics** shown_
+
+```
+aksarav@middlewareinventory:/apps/kubernetes$ kubectl get replicationcontroller
+NAME                       DESIRED   CURRENT   READY   AGE
+redis-db-desiredstate-rc   5         5         0       6s
+```
+
+_now run ```kubectl get pods``` to see the newly created pods with replication controller_
+```
+aksarav@middlewareinventory:/apps/kubernetes$ kubectl get pods
+NAME                             READY   STATUS    RESTARTS   AGE
+nginx-65899c769f-xvcmr           1/1     Running   1          5d
+radis-pod                        2/2     Running   0          14m
+redis-db-desiredstate-rc-7qdjg   1/1     Running   0          35s
+redis-db-desiredstate-rc-l5df4   1/1     Running   0          35s
+redis-db-desiredstate-rc-s4pvr   1/1     Running   0          35s
+redis-db-desiredstate-rc-v9kns   1/1     Running   0          35s
+redis-db-desiredstate-rc-zfwd2   1/1     Running   0          35s
+```
+
+### Step11
+_Let us test if we forcefully remove or delete a one of the pod from this **desired state pool** if K8s recreate it or not_
+
+Deleting one of the pod
+
+```
+aksarav@middlewareinventory:/apps/kubernetes$ kubectl delete pod redis-db-desiredstate-rc-7qdjg
+pod "redis-db-desiredstate-rc-7qdjg" deleted
+```
+
+check the replication controller status and get pods list to verify
+```
+aksarav@middlewareinventory:/apps/kubernetes$ kubectl get replicationcontroller
+NAME                       DESIRED   CURRENT   READY   AGE
+redis-db-desiredstate-rc   5         5         4       7m
+aksarav@middlewareinventory:/apps/kubernetes$ kubectl get pods
+NAME                             READY   STATUS    RESTARTS   AGE
+nginx-65899c769f-xvcmr           1/1     Running   1          5d
+radis-pod                        2/2     Running   0          21m
+redis-db-desiredstate-rc-l5df4   1/1     Running   0          7m
+redis-db-desiredstate-rc-lllbh   1/1     Running   0          11s
+redis-db-desiredstate-rc-s4pvr   1/1     Running   0          7m
+redis-db-desiredstate-rc-v9kns   1/1     Running   0          7m
+redis-db-desiredstate-rc-zfwd2   1/1     Running   0          7m
+```
+
+_**MAGIC** you can see K8s have already replaced that deleted pod with a new pod named ```redis-db-desiredstate-rc-lllbh```. You can check the AGE having **11 seconds** which proves this is new_
+
+
 
 
