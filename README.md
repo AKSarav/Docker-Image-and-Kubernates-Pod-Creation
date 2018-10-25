@@ -175,7 +175,7 @@ _Create a Manifest file with **Replication Controller** to acheive **desired sta
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: sarav-sample-rc
+  name: redis-db-desiredstate-rc
 spec:
   replicas: 5
   selector:
@@ -188,7 +188,7 @@ spec:
     spec:
       containers:
       - name: redispod
-        image: saravak/redis:latest 
+        image: saravak/redis:latest
         ports:
         - containerPort: 6379
 ```
